@@ -180,23 +180,31 @@ class IssueCard extends React.Component {
               {text}
             </div>
             <div id="issueCard-photos" className={css.photos}>
-              {photos.map((photo, index) => (
-                <img key={index} className={css.photo} alt={issue.title} src={photo} />
-              ))}
+              {photos.map((photo, index) => {
+                if (photo) {
+                  return <img key={index} className={css.photo} alt={issue.title} src={photo} />;
+                }
+                return <div />;
+              })}
             </div>
           </div>
-          {/* <div className={css.discussionContainer}> */}
           <div className={css.discussion}>
             <button id="viewDiscussion" type="button" onClick={() => this.handleViewDiscussionClick()} onKeyPress={() => {}} tabIndex={0}>
-              View Discussion
+              {!viewDiscussion
+                ? 'View Discussion'
+                : 'Close Discussion'}
             </button>
             {viewDiscussion
-              ? <Discussion discussionData={discussionData} issue={issue} user={user} />
-              : ''}
+              ? (
+                <Discussion
+                  discussionData={discussionData}
+                  issue={issue}
+                  user={user}
+                  onClick={this.getDiscussionData}
+                />
+              ) : ''}
           </div>
         </div>
-        {/* </div> */}
-        {/* </div> */}
       </div>
     );
   }
