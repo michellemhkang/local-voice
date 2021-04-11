@@ -2,17 +2,14 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import {
   Map, GoogleApiWrapper, Marker, InfoWindow,
 } from 'google-maps-react';
 import PropTypes from 'prop-types';
-import MapIssueModal from './MapIssueModal/MapIssueModal.jsx';
-import styles from './MapIssueModal/styles.module.css';
-
+// import MapIssueModal from './MapIssueModal/MapIssueModal.jsx';
 // import InfoWindowEx from './MapIssueModal/InfoWindowEx.jsx';
-
-// import API_TOKEN from './mapConfig.js';
+import styles from './styles.module.css';
 
 const mapStyles = {
   width: '58%',
@@ -22,7 +19,6 @@ const mapStyles = {
 const infoWindowStyles = {
   width: 100,
   height: 100,
-
 };
 
 class MapView extends React.Component {
@@ -36,19 +32,27 @@ class MapView extends React.Component {
       activeMarker: null,
       selectedIssue: {},
     };
+    this.getUserLocation = this.getUserLocation.bind(this);
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onClose = this.onClose.bind(this);
     this.displayMarkers = this.displayMarkers.bind(this);
     this.displayInfoWindow = this.displayInfoWindow.bind(this);
     this.onMapDragEnd = this.onMapDragEnd.bind(this);
-    this.getUserLocation = this.getUserLocation.bind(this);
     // this.onInfoWindowOpen = this.onInfoWindowOpen.bind(this);
-    // this.displayModal = this.displayModal.bind(this);
+    // this.displayIssueModal = this.displayIssueModal.bind(this);
   }
 
   componentDidMount() {
     this.getUserLocation();
     // this.displayMarkers();
+  }
+
+  onMarkerClick(props, marker, e) {
+    this.setState({
+      selectedIssue: props,
+      activeMarker: marker,
+      showingInfoWindow: true,
+    }, this.displayInfoWindow);
   }
 
   onClose(props) {
@@ -58,14 +62,6 @@ class MapView extends React.Component {
         activeMarker: null,
       });
     }
-  }
-
-  onMarkerClick(props, marker, e) {
-    this.setState({
-      selectedIssue: props,
-      activeMarker: marker,
-      showingInfoWindow: true,
-    }, this.displayInfoWindow);
   }
 
   onMapDragEnd(mapProps, map) {
@@ -78,28 +74,6 @@ class MapView extends React.Component {
     });
     getLoc(location);
   }
-
-  // displayModal() {
-  //   console.log('show modal');
-  //   return (
-  //     // <div>hello </div>
-  //     <MapIssueModal />
-  //   )
-  // }
-
-  // onInfoWindowOpen(props, e) {
-  //   const button = (
-  //     <button
-  //       onClick={(e) => {this.displayModal}}
-  //     >
-  //       modal
-  //     </button>
-  //   );
-  //   ReactDOM.render(
-  //     React.Children.only(button),
-  //     document.getElementById("iwc")
-  //   );
-  // }
 
   getUserLocation() {
     const { getLoc } = this.props;
@@ -137,20 +111,14 @@ class MapView extends React.Component {
     return null;
   }
 
-  // showDetails() {
-  //   return (
-  //     <MapIssueModal />
-  //   )
-  // }
-
   displayInfoWindow() {
     return (
       <InfoWindow
         marker={this.state.activeMarker}
-        // onOpen={this.onOpen}
-        onOpen={e => {
-          this.onInfoWindowOpen(this.props, e);
-        }}
+        /* Method 1 */
+        // onOpen={e => {
+        //   this.onInfoWindowOpen(this.props, e);
+        // }}
         onClose={this.onClose}
         visible={this.state.showingInfoWindow}
         style={infoWindowStyles}
@@ -163,15 +131,16 @@ class MapView extends React.Component {
           <h4>
             {this.state.selectedIssue.text}
           </h4>
-          <img className={styles.image} src={this.state.selectedIssue.url} alt="" /> 
-        {/* <MapIssueModal issue={this.state.selectedIssue} /> */}
+          <img className={styles.image} src={this.state.selectedIssue.url} alt="" />
+          {/* <MapIssueModal issue={this.state.selectedIssue} /> */}
+        </div>
+        {/* tried moving out of div to see if this'd work */}
         {/* <button
             type="button"
-            onClick={this.showDetails}
+            onClick={()=>{console.log('clicked')}}
           >
-            Show Details
+            Click me
           </button> */}
-        </div>
       </InfoWindow>
     );
   }
@@ -182,6 +151,27 @@ class MapView extends React.Component {
   //   // conditionally render MapIssueModal based on state
   //   return (
   //     <MapIssueModal issue={selectedIssue} />
+  //   );
+  // }
+
+  // showDetails() {
+  //   return (
+  //     <MapIssueModal />
+  //   )
+  // }
+
+  /* Method 1 */
+  // onInfoWindowOpen(props, e) {
+  //   const button = (
+  //     <button
+  //       onClick={(e) => {this.displayIssueModal}}
+  //     >
+  //       modal
+  //     </button>
+  //   );
+  //   ReactDOM.render(
+  //     React.Children.only(button),
+  //     document.getElementById("iwc")
   //   );
   // }
 
@@ -209,7 +199,7 @@ class MapView extends React.Component {
         >
           {this.displayMarkers()}
           {this.displayInfoWindow()}
-          {/* {this.displayModal()} */}
+          {/* {this.displayIssueModal()} */}
         </Map>
       </div>
     );

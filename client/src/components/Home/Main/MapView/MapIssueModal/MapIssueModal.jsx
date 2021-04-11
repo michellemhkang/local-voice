@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.module.css';
+import styles from '../styles.module.css';
 
 // import Discussion from '../../ListView/IssueCard/Discussion/Discussion.jsx';
 
@@ -16,10 +16,6 @@ class MapIssueModal extends React.Component {
     const { clicked } = this.state;
     return (
       <form className={styles.modal}>
-
-        {/* // <div>
-      //   clicked
-      // </div> */}
         <div id="mapIssueModal">
           {!clicked
             ? (

@@ -1,3 +1,5 @@
+/* Method 2 */
+
 import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 import { InfoWindow } from "google-maps-react";
